@@ -1,9 +1,13 @@
+export type TopicType = 'speaking' | 'writing' | 'grammar';
+
 export interface Topic {
   id: string;
   title: string;
   description: string;
   icon: string;
   category: 'daily' | 'ielts';
+  type: TopicType;
+  level: string[];
   questions: Question[];
 }
 

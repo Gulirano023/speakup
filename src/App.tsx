@@ -1,6 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Navigation, Sidebar } from './components/Navigation';
 import { LandingPage } from './pages/LandingPage';
+import { LoginPage } from './pages/LoginPage';
+import { PlacementTestPage } from './pages/PlacementTestPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { TopicsPage } from './pages/TopicsPage';
 import { PracticePage } from './pages/PracticePage';
@@ -11,31 +14,60 @@ import { RetryPage } from './pages/RetryPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { ProgressPage } from './pages/ProgressPage';
 import { InterviewPage } from './pages/InterviewPage';
+import { WritingPage } from './pages/WritingPage';
+import { GrammarPage } from './pages/GrammarPage';
 
-function App() {
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, user } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!user?.hasTakenTest) return <Navigate to="/placement-test" replace />;
+  return <>{children}</>;
+}
+
+function AuthRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, user } = useAuth();
+  if (isAuthenticated && user?.hasTakenTest) return <Navigate to="/dashboard" replace />;
+  return <>{children}</>;
+}
+
+function AppContent() {
+  const { isAuthenticated, user } = useAuth();
+
   return (
     <Router>
       <div className="min-h-screen bg-background">
-        <Sidebar />
-        <main className="md:ml-64">
+        {isAuthenticated && user?.hasTakenTest && <Sidebar />}
+        <main className={isAuthenticated && user?.hasTakenTest ? 'md:ml-64' : ''}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/topics" element={<TopicsPage />} />
-            <Route path="/practice" element={<PracticePage />} />
-            <Route path="/transcript" element={<TranscriptPage />} />
-            <Route path="/feedback" element={<FeedbackPage />} />
-            <Route path="/improve" element={<ImprovePage />} />
-            <Route path="/retry" element={<RetryPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/progress" element={<ProgressPage />} />
-            <Route path="/interview" element={<InterviewPage />} />
+            <Route path="/login" element={<AuthRoute><LoginPage /></AuthRoute>} />
+            <Route path="/placement-test" element={<ProtectedRoute><PlacementTestPage /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/topics" element={<ProtectedRoute><TopicsPage /></ProtectedRoute>} />
+            <Route path="/practice" element={<ProtectedRoute><PracticePage /></ProtectedRoute>} />
+            <Route path="/transcript" element={<ProtectedRoute><TranscriptPage /></ProtectedRoute>} />
+            <Route path="/feedback" element={<ProtectedRoute><FeedbackPage /></ProtectedRoute>} />
+            <Route path="/improve" element={<ProtectedRoute><ImprovePage /></ProtectedRoute>} />
+            <Route path="/retry" element={<ProtectedRoute><RetryPage /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+            <Route path="/progress" element={<ProtectedRoute><ProgressPage /></ProtectedRoute>} />
+            <Route path="/interview" element={<ProtectedRoute><InterviewPage /></ProtectedRoute>} />
+            <Route path="/writing" element={<ProtectedRoute><WritingPage /></ProtectedRoute>} />
+            <Route path="/grammar" element={<ProtectedRoute><GrammarPage /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-          <Navigation />
+          {isAuthenticated && user?.hasTakenTest && <Navigation />}
         </main>
       </div>
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
