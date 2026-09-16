@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #0a0a0f;
+  color: #ffffff;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #12121a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a3a5e;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed;
+}
+
+::selection {
+  background: rgba(124, 58, 237, 0.3);
+  color: #ffffff;
+}
+
+@layer components {
+  .glass {
+    background: rgba(18, 18, 26, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(42, 42, 62, 0.5);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #7c3aed, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-border {
+    position: relative;
+    background: #12121a;
+    border-radius: 1rem;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem;
+    padding: 1px;
+    background: linear-gradient(135deg, #7c3aed, #3b82f6);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-light text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 shadow-glow hover:shadow-glow-lg hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply bg-surface-light hover:bg-surface-hover text-text-primary font-semibold px-6 py-3 rounded-xl border border-border transition-all duration-300;
+  }
+
+  .card {
+    @apply bg-surface rounded-2xl border border-border p-6 transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply card hover:border-primary/50 hover:shadow-glow cursor-pointer;
+  }
+
+  .input-field {
+    @apply bg-surface-light border border-border rounded-xl px-4 py-3 text-text-primary placeholder-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all;
+  }
+}
