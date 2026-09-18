@@ -24,6 +24,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function AuthOnlyRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+}
+
 function AuthRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, user } = useAuth();
   if (isAuthenticated && user?.hasTakenTest) return <Navigate to="/dashboard" replace />;
@@ -41,7 +47,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<AuthRoute><LoginPage /></AuthRoute>} />
-            <Route path="/placement-test" element={<ProtectedRoute><PlacementTestPage /></ProtectedRoute>} />
+            <Route path="/placement-test" element={<AuthOnlyRoute><PlacementTestPage /></AuthOnlyRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
             <Route path="/topics" element={<ProtectedRoute><TopicsPage /></ProtectedRoute>} />
             <Route path="/practice" element={<ProtectedRoute><PracticePage /></ProtectedRoute>} />

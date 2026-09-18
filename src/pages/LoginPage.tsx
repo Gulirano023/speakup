@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mic, Eye, EyeOff, ArrowRight } from 'lucide-react';
@@ -14,14 +14,15 @@ export function LoginPage() {
   const { login, register, user } = useAuth();
   const navigate = useNavigate();
 
-  if (user) {
-    if (!user.hasTakenTest) {
-      navigate('/placement-test');
-    } else {
-      navigate('/dashboard');
+  useEffect(() => {
+    if (user) {
+      if (!user.hasTakenTest) {
+        navigate('/placement-test', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     }
-    return null;
-  }
+  }, [user, navigate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
