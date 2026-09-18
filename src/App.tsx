@@ -40,7 +40,7 @@ function AppContent() {
   const { isAuthenticated, user } = useAuth();
 
   return (
-    <Router>
+    <Router basename="/speakup">
       <div className="min-h-screen bg-background">
         {isAuthenticated && user?.hasTakenTest && <Sidebar />}
         <main className={isAuthenticated && user?.hasTakenTest ? 'md:ml-64' : ''}>
