@@ -1,4 +1,3 @@
-wertyuiuytr
 
 765
 # React + TypeScript + Vite
