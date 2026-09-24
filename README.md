@@ -1,4 +1,3 @@
-DSDFGHJKILOKUJHGTFRDSDFGHU
 
 # React + TypeScript + Vite
 
